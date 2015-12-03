@@ -1,10 +1,7 @@
 package org.walkerljl.db.orm;
 
-import java.util.List;
-
-import org.walkerljl.commons.collection.CollectionUtils;
+import org.walkerljl.commons.exception.AppException;
 import org.walkerljl.commons.util.ReflectUtils;
-import org.walkerljl.commons.util.StringUtils;
 import org.walkerljl.db.orm.entity.Column;
 import org.walkerljl.db.orm.entity.Table;
 import org.walkerljl.db.orm.parse.TableManager;
@@ -16,7 +13,7 @@ import org.walkerljl.db.orm.parse.TableManager;
  * @author lijunlin
  */
 public class EntityFieldValueUtils {
-
+	
 	/**
 	 * 获取字段值
 	 * @param entity
@@ -27,19 +24,14 @@ public class EntityFieldValueUtils {
 		if (table == null) {
 			return null;
 		}
-		List<Column> columns = table.getColumns();
-		if (CollectionUtils.isEmpty(columns)) {
+		int columnsSize = table.getColumns().size();
+		if (columnsSize == 0) {
 			return null;
 		}
-		Object[] fieldValues = new Object[columns.size()];
-		for (int i = 0; i < columns.size(); i++) {
-			Column column = columns.get(i);
-			String fieldName = column.getFieldName();
-			if (StringUtils.isEmpty(fieldName)) {
-				fieldValues[i] = null;
-			} else {
-				fieldValues[i] = getFieldValue(entity, column);
-			}
+		
+		Object[] fieldValues = new Object[columnsSize];
+		for (int i = 0; i < columnsSize; i++) {
+			fieldValues[i] = getFieldValue(entity, table.getColumns().get(i));
 		}
 		return fieldValues;
 	}
@@ -57,7 +49,7 @@ public class EntityFieldValueUtils {
 		try {
 			return ReflectUtils.invoke(entity, column.getGetterName());
 		} catch (Exception e) {
-			return null;
+			throw new AppException(e);
 		}
 	}
 }

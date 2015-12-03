@@ -4,12 +4,14 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.util.List;
 
+import org.walkerljl.commons.collection.ArraysUtils;
 import org.walkerljl.commons.collection.CollectionUtils;
+import org.walkerljl.commons.util.Assert;
+import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.executor.Executor;
 import org.walkerljl.db.orm.executor.defaults.DefaultExecutor;
 import org.walkerljl.db.orm.session.Configuration;
 import org.walkerljl.db.orm.session.SqlSession;
-import org.walkerljl.db.orm.sql.SqlEntry;
 import org.walkerljl.db.orm.sql.SqlGenerator;
 
 /**
@@ -20,9 +22,16 @@ import org.walkerljl.db.orm.sql.SqlGenerator;
  */
 public class DefaultSqlSession implements SqlSession {
 
+	private static final String MESSAGE_SQL_IS_NULL = "生成SQL对象为NULL";
+	private static final String MESSAGE_ENTITY_IS_NULL = "实体对象为NULL";
+	private static final String MESSAGE_KEYS_IS_EMPTY = "主键列表为空";
 	private Configuration configuration;
 	private Executor executor;
-	
+		
+	/**
+	 * 构造函数
+	 * @param configuration
+	 */
 	public DefaultSqlSession(Configuration configuration) {
 		this.configuration = configuration;
 		this.executor = new DefaultExecutor(this.configuration.getDataSource());
@@ -30,54 +39,86 @@ public class DefaultSqlSession implements SqlSession {
 	
 	@Override
 	public <T> int insert(T entity) {
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
 		SqlEntry sqlEntry = SqlGenerator.generateInsertSql(entity);
-		if (sqlEntry == null) {
-			return 0;
-		}
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
 		executor.insertReturnPK(sqlEntry.getSql(), sqlEntry.getParams());
 		return 1;
 	}
 
 	@Override
 	public <T> int insert(List<T> entities) {
-		if (CollectionUtils.isEmpty(entities)) {
-			return 0;
-		}
-		int counter = 0;
-		for (T entity : entities) {
-			counter += insert(entity);
-		}
-		return counter;
+		Assert.isTrue(CollectionUtils.isNotEmpty(entities), MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateInsertSql(entities);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override
+	public <KEY extends Serializable, T> int deleteByKeys(T entity, KEY... keys) {
+		Assert.isTrue(ArraysUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateDeleteByKeysSql(entity, keys);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
 	@Override
 	public <T> int delete(T entity) {
-		// TODO Auto-generated method stub
-		return 0;
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateDeleteSql(entity);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override
+	public <KEY extends Serializable, T> int updateByKeys(T entity, KEY... keys) {
+		Assert.isTrue(ArraysUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateUpdateByKeysSql(entity, keys);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
 	@Override
 	public <T> int update(T entity, T condition) {
-		// TODO Auto-generated method stub
-		return 0;
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateUpdateSql(entity, condition);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
-	@Override
-	public <T> List<T> selectOne(T entity) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override @SuppressWarnings("unchecked")
+	public <KEY extends Serializable, T> List<T> selectByKeys(T entity, KEY... keys) {
+		Assert.isTrue(ArraysUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateSelectByKeysSql(entity, keys);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return (List<T>) executor.queryEntityList(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
 	}
-
-	@Override
-	public <T> List<T> selectList(T entity) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	@Override @SuppressWarnings("unchecked")
+	public <T> T selectOne(T entity) {
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateSelectSql(entity, 1, 1);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return (T) executor.queryEntity(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
+	}
+	
+	@Override @SuppressWarnings("unchecked")
+	public <T> List<T> selectList(T entity, int currentPage, int pageSize) {
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateSelectSql(entity, currentPage, pageSize);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return (List<T>) executor.queryEntityList(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
 	}
 	
 	@Override
 	public <T> int selectCount(T entity) {
-		// TODO Auto-generated method stub
-		return 0;
+		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
+		SqlEntry sqlEntry = SqlGenerator.generateSelectCountSql(entity);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return (int) executor.queryEntity(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
 	@Override
@@ -100,52 +141,12 @@ public class DefaultSqlSession implements SqlSession {
 
 	@Override
 	public Configuration getConfiguration() {
-		// TODO Auto-generated method stub
-		return null;
+		return configuration;
 	}
 
 	@Override
 	public Connection getConnection() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public <KEY extends Serializable, T> int deleteByKey(KEY key, T entity) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <KEY extends Serializable, T> int deleteByKeys(List<KEY> keys,
-			T entity) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <KEY extends Serializable, T> int updateByKey(KEY key, T entity) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <KEY extends Serializable, T> int updateByKeys(List<KEY> keys,
-			T entity) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public <KEY extends Serializable, T> T selectByKey(KEY key, T entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <KEY extends Serializable, T> List<T> selectByKeys(List<KEY> keys,
-			T entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	}	
 }

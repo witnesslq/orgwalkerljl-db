@@ -12,30 +12,80 @@ import java.util.List;
  */
 public interface SqlSession extends Closeable {
 
+	/**
+	 * 添加
+	 * @param entity
+	 * @return
+	 */
 	<T> int insert(T entity);
 
+	/**
+	 * 添加
+	 * @param entities
+	 * @return
+	 */
 	<T> int insert(List<T> entities);
 	
-	<KEY extends Serializable, T> int deleteByKey(KEY key, T entity);
+	/**
+	 * 根据主键Key列表批量删除
+	 * @param entity
+	 * @param keys
+	 * @return
+	 */
+	<KEY extends Serializable, T> int deleteByKeys(T entity, KEY... keys);
 	
-	<KEY extends Serializable, T> int deleteByKeys(List<KEY> keys, T entity);
-	
+	/**
+	 * 删除
+	 * @param entity
+	 * @return
+	 */
 	<T> int delete(T entity);
-
-	<KEY extends Serializable, T> int updateByKey(KEY key, T entity);
 	
-	<KEY extends Serializable, T> int updateByKeys(List<KEY> keys, T entity);
+	/**
+	 * 根据主键列表批量更新
+	 * @param entity
+	 * @param keys
+	 * @return
+	 */
+	<KEY extends Serializable, T> int updateByKeys(T entity, KEY... keys);
 	
+	/**
+	 * 更新
+	 * @param entity
+	 * @param condition
+	 * @return
+	 */
 	<T> int update(T entity, T condition);
-
-	<T> List<T> selectOne(T entity);
-
-	<KEY extends Serializable, T> T selectByKey(KEY key, T entity);
 	
-	<KEY extends Serializable, T> List<T> selectByKeys(List<KEY> keys, T entity);
+	/**
+	 * 根据主键列表查询
+	 * @param entity
+	 * @param keys
+	 * @return
+	 */
+	<KEY extends Serializable, T> List<T> selectByKeys(T entity, KEY... keys);
 	
-	<T> List<T> selectList(T entity);
+	/**
+	 * 查询单个实体
+	 * @param entity
+	 * @return
+	 */
+	<T> T selectOne(T entity);
 	
+	/**
+	 * 查询实体列表
+	 * @param entity
+	 * @param currentPage
+	 * @param pageSize
+	 * @return
+	 */
+	<T> List<T> selectList(T entity, int currentPage, int pageSize);
+	
+	/**
+	 * 查询实体数量
+	 * @param entity
+	 * @return
+	 */
 	<T> int selectCount(T entity);
 
 	void commit();

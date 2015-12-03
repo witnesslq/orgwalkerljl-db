@@ -5,11 +5,11 @@
  */
 package org.walkerljl.db.orm.entity;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.walkerljl.commons.collection.CollectionUtils;
-import org.walkerljl.commons.collection.MapUtils;
 import org.walkerljl.commons.util.StringPool;
 
 /**
@@ -45,7 +45,7 @@ public class Table {
 	 */
 	public Map<String, String> getColumnToPropertyMap() {
 		if (columnToPropertyMap == null) {
-			columnToPropertyMap = MapUtils.newHashMap();
+			columnToPropertyMap = new LinkedHashMap<String, String>();
 			for (Column column : columns) {
 				columnToPropertyMap.put(column.getName(), column.getFieldName());
 			}

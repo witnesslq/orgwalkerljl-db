@@ -284,7 +284,7 @@ public class DefaultExecutor implements Executor {
      */
     private void printSQL(String sql) {
     	if (LOG.isDebugEnabled()) {
-    		LOG.debug("[orgwalkerljl.commons.db] SQL - " + sql);
+    		LOG.debug("[orgwalkerljl-db] SQL - " + sql);
     	}
     }
     
