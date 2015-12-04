@@ -52,8 +52,8 @@ public class TableManager {
 						}
 					}
 				} finally {
-					readLock.lock();
 					writeLock.unlock();
+					readLock.lock();
 				}
 			}
 		} finally {

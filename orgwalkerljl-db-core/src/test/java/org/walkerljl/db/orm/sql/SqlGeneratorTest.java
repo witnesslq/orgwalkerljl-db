@@ -1,8 +1,6 @@
 package org.walkerljl.db.orm.sql;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Test;
 import org.walkerljl.db.orm.entity.SqlEntry;
@@ -21,38 +19,10 @@ public class SqlGeneratorTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(SqlGeneratorTest.class);
 
 	@Test
-	public void generateInsertSql() {
-		User user = new User();
-		user.setId(1L);
-		user.setUserId("jarvis");
-		user.setUserName("JARVIS");
-		user.setSex("m");
-		user.setEmail("xxx@163.com");
-		user.setMobile("10000000");
-		user.setTelephone("xxxxxxx");
-		user.setBirthday(new Date());
-		user.setIdCardNumber("100");
-		Date date = new Date();
-		user.setLastLoginDate(date);
-		user.setRemark("测试");
-		user.setStatus(1);
-		user.setCreateDate(date);
-		user.setUserId("jarvis");
-		user.setUserName("JARVIS");
-		user.setLastModifyDate(date);
-		user.setLastModifyUserId("jarvis");
-		user.setLastModifyUserName("JARVIS");
-
-		print("generateInsertSql", SqlGenerator.generateInsertSql(user));
-
-	}
-
-	@Test
 	public void generateBatchInsertSql() {
-		List<User> users = new ArrayList<User>();
-		for (int i = 1; i <= 5; i++) {
+		User[] users = new User[5];
+		for (int i = 0; i < 5; i++) {
 			User user = new User();
-			users.add(user);
 			user.setId((long) i);
 			user.setUserId("jarvis" + i);
 			user.setUserName("JARVIS" + i);
@@ -72,6 +42,8 @@ public class SqlGeneratorTest {
 			user.setLastModifyDate(date);
 			user.setLastModifyUserId("jarvis" + i);
 			user.setLastModifyUserName("JARVIS" + i);
+			
+			users[i] = user;
 		}
 
 		print("generateBatchInsertSql", SqlGenerator.generateBatchInsertSql(users));
@@ -79,7 +51,7 @@ public class SqlGeneratorTest {
 
 	@Test
 	public void generateDeleteByKeysSql() {
-		print("generateDeleteByKeysSql", SqlGenerator.generateDeleteByKeysSql(new User(), new Integer[]{1,2,3,4,5}));
+		print("generateDeleteByKeysSql", SqlGenerator.generateDeleteByKeysSql(User.class, new Integer[]{1,2,3,4,5}));
 	}
 
 	@Test
@@ -94,17 +66,24 @@ public class SqlGeneratorTest {
 	@Test
 	public void generateUpdateByKeysSql() {
 		//print("generateUpdateByKeysSql", SqlGenerator.generateUpdateByKeysSql(new User(), 1));
-		print("generateUpdateByKeysSql", SqlGenerator.generateUpdateByKeysSql(new User(), new Integer[]{1,2,3,4,5}));
+		User modifiedEntity = new User();
+		modifiedEntity.setUserName("aliasUserName");
+		print("generateUpdateByKeysSql", SqlGenerator.generateUpdateByKeysSql(modifiedEntity, new Integer[]{1,2,3,4,5}));
 	}
 
 	@Test
 	public void generateUpdateSql() {
-		print("generateUpdateSql", SqlGenerator.generateUpdateSql(new User(), new User()));
+		User modifiedEntity = new User();
+		modifiedEntity.setUserName("aliasUserName");
+		
+		User modifiedCondition = new User();
+		modifiedCondition.setUserId("userId");
+		print("generateUpdateSql", SqlGenerator.generateUpdateSql(modifiedEntity, modifiedCondition));
 	}
 
 	@Test
 	public void generateSelectByKeysSql() {
-		print("generateSelectByKeysSql", SqlGenerator.generateSelectByKeysSql(new User(), new Integer[]{1,2,3,4,5}));
+		print("generateSelectByKeysSql", SqlGenerator.generateSelectByKeysSql(User.class, new Integer[]{1,2,3,4,5}));
 	}
 
 	@Test
@@ -123,8 +102,15 @@ public class SqlGeneratorTest {
 		}
 		LOGGER.info(messagePrefix + " sql -> " + (sqlEntry.getSql() == null ? "NULL" : sqlEntry.getSql()));
 		StringBuilder paramsString = new StringBuilder();
-		for (Object param : sqlEntry.getParams()) {
-			paramsString.append(param == null ? "NULL" : param.toString()).append(",");
+		if (sqlEntry.getParams() != null) {
+			int index = 0;
+			for (Object param : sqlEntry.getParams()) {
+				if (index != 0) {
+					paramsString.append(",");
+				}
+				paramsString.append(param == null ? "NULL" : param.toString());
+				index ++;
+			}
 		}
 		LOGGER.info(messagePrefix + " params -> " + paramsString.toString());
 	}

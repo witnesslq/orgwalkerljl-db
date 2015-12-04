@@ -14,25 +14,20 @@ public interface SqlSession extends Closeable {
 
 	/**
 	 * 添加
-	 * @param entity
-	 * @return
-	 */
-	<T> int insert(T entity);
-
-	/**
-	 * 添加
 	 * @param entities
 	 * @return
 	 */
-	<T> int insert(List<T> entities);
+	@SuppressWarnings("unchecked")
+	<T> int insert(T... entities);
 	
 	/**
 	 * 根据主键Key列表批量删除
-	 * @param entity
+	 * @param entityClass
 	 * @param keys
 	 * @return
 	 */
-	<KEY extends Serializable, T> int deleteByKeys(T entity, KEY... keys);
+	@SuppressWarnings("unchecked")
+	<KEY extends Serializable, T> int deleteByKeys(Class<T> entityClass, KEY... keys);
 	
 	/**
 	 * 删除
@@ -47,6 +42,7 @@ public interface SqlSession extends Closeable {
 	 * @param keys
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	<KEY extends Serializable, T> int updateByKeys(T entity, KEY... keys);
 	
 	/**
@@ -59,11 +55,12 @@ public interface SqlSession extends Closeable {
 	
 	/**
 	 * 根据主键列表查询
-	 * @param entity
+	 * @param entityClass
 	 * @param keys
 	 * @return
 	 */
-	<KEY extends Serializable, T> List<T> selectByKeys(T entity, KEY... keys);
+	@SuppressWarnings("unchecked")
+	<KEY extends Serializable, T> List<T> selectByKeys(Class<T> entityClass, KEY... keys);
 	
 	/**
 	 * 查询单个实体

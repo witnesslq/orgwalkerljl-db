@@ -26,6 +26,9 @@ public class TableParser {
 	 * @return
 	 */
 	public static Table parse(Class<?> entityClass) {
+		if (entityClass == null) {
+			return null;
+		}
 		Table table = parseTable(entityClass);
 		if (table == null) {
 			return null;
@@ -40,6 +43,9 @@ public class TableParser {
 	 * @return
 	 */
 	public static String parseTableName(Class<?> entityClass) {
+		if (entityClass == null) {
+			return null;
+		}
 		Table table = parseTable(entityClass);
 		if (table == null) {
 			return null;
@@ -53,6 +59,9 @@ public class TableParser {
 	 * @return
 	 */
 	private static Table parseTable(Class<?> entityClass) {
+		if (entityClass == null) {
+			return null;
+		}
 		Entity entity = entityClass.getAnnotation(Entity.class);
 		if (entity == null) {
 			LOGGER.warn(String.format("%s实体没有标注%s注解", entityClass, Table.class));
@@ -77,6 +86,9 @@ public class TableParser {
 	 * @param entityClass
 	 */
 	private static void parseColumn(Table table, Class<?> entityClass) {
+		if (table == null || entityClass == null) {
+			return;
+		}
 		Field[] fields = entityClass.getDeclaredFields();
 		if (fields == null || fields.length == 0) {
 			LOGGER.warn(String.format("%s空字段实体", entityClass));
@@ -108,5 +120,4 @@ public class TableParser {
 			}
 		}
 	}
-	
 }
