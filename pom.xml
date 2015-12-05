@@ -9,6 +9,7 @@
 	<modules>
 		<module>orgwalkerljl-db-core</module>
 		<module>orgwalkerljl-db-ds</module>
+		<module>orgwalkerljl-db-api</module>
 	</modules>
 
 	<properties>

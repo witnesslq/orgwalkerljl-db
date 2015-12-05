@@ -10,6 +10,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.walkerljl.db</groupId>
+			<artifactId>orgwalkerljl-db-api</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.walkerljl.commons</groupId>
 			<artifactId>orgwalkerljl-commons-core</artifactId>
 		</dependency>

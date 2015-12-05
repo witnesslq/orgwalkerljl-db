@@ -73,7 +73,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return result;
     }
@@ -92,7 +92,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return result;
     }
@@ -106,7 +106,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return entityMap;
     }
@@ -120,7 +120,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return array;
     }
@@ -134,7 +134,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return arrayList;
     }
@@ -148,7 +148,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return map;
     }
@@ -162,7 +162,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return fieldMapList;
     }
@@ -176,7 +176,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new RuntimeException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return obj;
     }
@@ -190,7 +190,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new RuntimeException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return list;
     }
@@ -204,7 +204,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new RuntimeException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return map;
     }
@@ -218,7 +218,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new RuntimeException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return result;
     }
@@ -233,7 +233,7 @@ public class DefaultExecutor implements Executor {
         	LOG.error(MESSAGE_UPDATE_FAILURE, e);
             throw new DataAccessException(e);
         } finally {
-        	printSQL(sql);
+        	printSQL(sql, params);
         }
         return result;
     }
@@ -259,8 +259,9 @@ public class DefaultExecutor implements Executor {
         } catch (SQLException e) {
         	LOG.error(MESSAGE_INSERT_FAILURE, e);
             throw new DataAccessException(e);
+        } finally {
+        	printSQL(sql, params);
         }
-        printSQL(sql);
         return key;
     }
 
@@ -279,12 +280,22 @@ public class DefaultExecutor implements Executor {
     }
 
     /**
-     * 打印SQL
+     * 打印执行SQL和参数
      * @param sql
+     * @param params
      */
-    private void printSQL(String sql) {
+    private void printSQL(String sql, Object... params) {
     	if (LOG.isDebugEnabled()) {
     		LOG.debug("[orgwalkerljl-db] SQL - " + sql);
+    		int paramsLength = ArraysUtils.size(params);
+    		if (paramsLength != 0) {
+    			StringBuilder paramsString = new StringBuilder();
+    			paramsString.append(params[0] == null ? "null" : params[0].toString());
+    			for (int i = 1; i < params.length; i++) {
+    				paramsString.append(", ").append(params[i] == null ? "null" : params[i].toString());
+    			}
+    			LOG.debug("[orgwalkerljl-db] PARAMS - " + paramsString.toString());
+    		}
     	}
     }
     

@@ -2,8 +2,8 @@ package org.walkerljl.db.orm;
 
 import java.io.Serializable;
 
-import org.walkerljl.db.orm.annotation.Column;
-import org.walkerljl.db.orm.annotation.Entity;
+import org.walkerljl.db.api.annotation.Column;
+import org.walkerljl.db.api.annotation.Entity;
 
 /**
  *

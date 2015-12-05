@@ -183,7 +183,7 @@ public class SqlGenerator {
 		int keysLength = keys.length;
 		StringBuilder sql = new StringBuilder("SELECT ").append(table.getColumnNameListString()).append(" FROM ").append(table.getName()).append(" WHERE ").append(table.getPrimaryKey().getName());
 		if (keysLength == 1) {
-			sql.append(table.getPrimaryKey().getName()).append(" = ").append("?").append(" LIMIT 0,1");
+			sql.append(" = ").append("?").append(" LIMIT 0,1");
 		} else {
 			sql.append(" IN(").append(join("?", keysLength, ",")).append(")");
 		}

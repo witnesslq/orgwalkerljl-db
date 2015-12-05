@@ -28,7 +28,7 @@ public class TableManager {
 	private final Lock readLock = lock.readLock();
 	private final Lock writeLock = lock.writeLock();
 
-	private Cache<Class<?>, Table> tableCache = new LRUCache<Class<?>, Table>(100);
+	private final Cache<Class<?>, Table> tableCache = new LRUCache<Class<?>, Table>(100);
 	
 	private TableManager() {}
 	
@@ -47,8 +47,11 @@ public class TableManager {
 				try {
 					if (table == null) {
 						table = TableParser.parse(entityClass);
+						if (table != null) {
+							tableCache.put(entityClass, table);
+						}
 						if (LOGGER.isDebugEnabled()) {
-							LOGGER.debug(String.format("Parse entity : %s to table", entityClass));
+							LOGGER.debug(String.format("解析实体:%s", entityClass));
 						}
 					}
 				} finally {
