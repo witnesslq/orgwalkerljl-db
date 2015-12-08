@@ -24,7 +24,7 @@ public class EntityQuery extends AbstractEntityQuery implements Serializable {
 	private StringBuilder sql = new StringBuilder();
 	private Map<String, Object> parameters = new HashMap<String, Object>();
 	private Set<String> ignoredProperties = SetUtils.newHashSet();
-	private boolean ignoreAll = false;
+	//private boolean ignoreAll = false;
 	
 	public static EntityQuery createQuery() {
 		return new EntityQuery();
@@ -39,7 +39,7 @@ public class EntityQuery extends AbstractEntityQuery implements Serializable {
 		if (null != key && !"".equals(key) && value != null) {
 			parameters.put(key, value);
 		}
-		ignoreAll = true;
+		//ignoreAll = true;
 		return this;
 	}
 	

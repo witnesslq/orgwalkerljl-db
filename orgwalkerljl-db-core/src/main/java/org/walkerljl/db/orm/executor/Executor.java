@@ -101,7 +101,7 @@ public interface Executor {
      * @param params
      * @return
      */
-    long queryCount(String sql, Object... params);
+    int queryCount(String sql, Object... params);
 
     /**
      * 执行更新操作（包括：update、insert、delete），返回所更新的记录数

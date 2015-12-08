@@ -99,7 +99,8 @@ public class DefaultSqlSession implements SqlSession {
 	public <T> int selectCount(T entity) {
 		SqlEntry sqlEntry = SqlGenerator.generateSelectCountSql(entity);
 		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		return (int) executor.queryEntity(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
+		Integer count = (Integer) executor.queryCount(sqlEntry.getSql(), sqlEntry.getParams());
+		return count == null ? 0 : count;
 	}
 
 	@Override
