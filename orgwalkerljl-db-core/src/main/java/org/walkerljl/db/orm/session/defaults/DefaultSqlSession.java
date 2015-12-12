@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.util.List;
 
-import javax.sql.DataSource;
-
+import org.walkerljl.commons.collection.ListUtils;
 import org.walkerljl.commons.util.Assert;
 import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.executor.Executor;
@@ -15,98 +14,112 @@ import org.walkerljl.db.orm.session.SqlSession;
 import org.walkerljl.db.orm.sql.SqlGenerator;
 
 /**
- *
+ * 
  * DefaultSqlSession
  *
  * @author lijunlin
+ *
+ * @param <T>
+ * @param <KEY>
  */
-public class DefaultSqlSession implements SqlSession {
+public class DefaultSqlSession<T, KEY extends Serializable> implements SqlSession<T, KEY>{
 
 	private static final String MESSAGE_SQL_IS_NULL = "生成SQL对象为NULL";
 	private Configuration configuration;
 	private Executor executor;
+	private SqlGenerator sqlGenerator;
 		
 	/**
 	 * 构造函数
 	 * @param configuration
 	 */
 	public DefaultSqlSession(Configuration configuration) {
+		Assert.isTrue(configuration != null, "configuration 为NULL");
+		Assert.isTrue(configuration.getDataSource() != null, "dataSource 为NULL");
+		Assert.isTrue(configuration.getDatabaseType() != null, "databaseType 为NULL");
 		this.configuration = configuration;
 		this.executor = new DefaultExecutor(this.configuration.getDataSource());
-	}
-	
-	public DefaultSqlSession(DataSource dataSource) {
-		this.executor = new DefaultExecutor(dataSource);
+		this.sqlGenerator = new SqlGenerator(this.configuration.getDatabaseType());
 	}
 
 	@Override @SuppressWarnings("unchecked")
-	public <T> int insert(T... entities) {
-		SqlEntry sqlEntry = SqlGenerator.generateBatchInsertSql(entities);
+	public KEY insertReturnPK(T entity) {
+		SqlEntry sqlEntry = sqlGenerator.generateBatchInsertSql(ListUtils.newArrayList(entity));
 		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
+		return (KEY) executor.insertReturnPK(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
-	@Override @SuppressWarnings("unchecked")
-	public <KEY extends Serializable, T> int deleteByKeys(Class<T> entityClass, KEY... keys) {
-		SqlEntry sqlEntry = SqlGenerator.generateDeleteByKeysSql(entityClass, keys);
+	@Override
+	public int insert(List<T> entities) {
+		SqlEntry sqlEntry = sqlGenerator.generateBatchInsertSql(entities);
 		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
 		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
 	@Override
-	public <T> int delete(T entity) {
-		SqlEntry sqlEntry = SqlGenerator.generateDeleteSql(entity);
-		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
+	public int deleteByKey(Class<T> entityClass, KEY key) {
+		return deleteByKeys(entityClass, ListUtils.newArrayList(key));
 	}
 
-	@Override @SuppressWarnings("unchecked")
-	public <KEY extends Serializable, T> int updateByKeys(T entity, KEY... keys) {
-		SqlEntry sqlEntry = SqlGenerator.generateUpdateByKeysSql(entity, keys);
+	@Override
+	public int deleteByKeys(Class<T> entityClass, List<KEY> keys) {
+		SqlEntry sqlEntry = sqlGenerator.generateDeleteByKeysSql(entityClass, keys);
 		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
 		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
 	@Override
-	public <T> int update(T entity, T condition) {
-		SqlEntry sqlEntry = SqlGenerator.generateUpdateSql(entity, condition);
+	public int delete(T condition) {
+		SqlEntry sqlEntry = sqlGenerator.generateDeleteSql(condition);
 		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
 		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
-	@Override @SuppressWarnings("unchecked")
-	public <KEY extends Serializable, T> List<T> selectByKeys(Class<T> entityClass, KEY... keys) {
-		SqlEntry sqlEntry = SqlGenerator.generateSelectByKeysSql(entityClass, keys);
-		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		return (List<T>) executor.queryEntityList(entityClass, sqlEntry.getSql(), sqlEntry.getParams());
-	}
-	
-	@Override @SuppressWarnings("unchecked")
-	public <T> T selectOne(T entity) {
-		SqlEntry sqlEntry = SqlGenerator.generateSelectSql(entity, 1, 1);
-		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		return (T) executor.queryEntity(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
-	}
-	
-	@Override @SuppressWarnings("unchecked")
-	public <T> List<T> selectList(T entity, int currentPage, int pageSize) {
-		SqlEntry sqlEntry = SqlGenerator.generateSelectSql(entity, currentPage, pageSize);
-		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		return (List<T>) executor.queryEntityList(entity.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
-	}
-	
 	@Override
-	public <T> int selectCount(T entity) {
-		SqlEntry sqlEntry = SqlGenerator.generateSelectCountSql(entity);
-		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
-		Integer count = (Integer) executor.queryCount(sqlEntry.getSql(), sqlEntry.getParams());
-		return count == null ? 0 : count;
+	public int updateByKey(T entity, KEY key) {
+		return updateByKeys(entity, ListUtils.newArrayList(key));
 	}
 
 	@Override
-	public void close() {
-		// TODO Auto-generated method stub
-		
+	public int updateByKeys(T entity, List<KEY> keys) {
+		SqlEntry sqlEntry = sqlGenerator.generateUpdateByKeysSql(entity, keys);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override
+	public int update(T entity, T condition) {
+		SqlEntry sqlEntry = sqlGenerator.generateUpdateSql(entity, condition);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.update(sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override
+	public T selectByKey(Class<T> entityClass, KEY key) {
+		SqlEntry sqlEntry = sqlGenerator.generateSelectByKeysSql(entityClass, ListUtils.newArrayList(key));
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.queryEntity(entityClass, sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override
+	public List<T> selectListByKeys(Class<T> entityClass, List<KEY> keys) {
+		SqlEntry sqlEntry = sqlGenerator.generateSelectByKeysSql(entityClass, keys);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.queryEntityList(entityClass, sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override @SuppressWarnings("unchecked")
+	public List<T> selectList(T condition, int currentPage, int pageSize) {
+		SqlEntry sqlEntry = sqlGenerator.generateSelectSql(condition, currentPage, pageSize);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return (List<T>) executor.queryEntityList(condition.getClass(), sqlEntry.getSql(), sqlEntry.getParams());
+	}
+
+	@Override
+	public int selectListCount(T condition) {
+		SqlEntry sqlEntry = sqlGenerator.generateSelectCountSql(condition);
+		Assert.isTrue(sqlEntry != null, MESSAGE_SQL_IS_NULL);
+		return executor.queryCount(sqlEntry.getSql(), sqlEntry.getParams());
 	}
 
 	@Override
@@ -122,13 +135,22 @@ public class DefaultSqlSession implements SqlSession {
 	}
 
 	@Override
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public Configuration getConfiguration() {
-		return configuration;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public Connection getConnection() {
 		// TODO Auto-generated method stub
 		return null;
-	}	
+	}
+
+	
 }

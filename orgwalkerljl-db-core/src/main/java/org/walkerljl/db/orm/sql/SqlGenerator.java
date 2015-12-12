@@ -2,7 +2,6 @@ package org.walkerljl.db.orm.sql;
 
 import java.util.List;
 
-import org.walkerljl.commons.collection.ArraysUtils;
 import org.walkerljl.commons.collection.CollectionUtils;
 import org.walkerljl.commons.collection.ListUtils;
 import org.walkerljl.commons.util.Assert;
@@ -11,6 +10,7 @@ import org.walkerljl.db.orm.Page;
 import org.walkerljl.db.orm.entity.Column;
 import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.entity.Table;
+import org.walkerljl.db.orm.enums.DatabaseType;
 import org.walkerljl.db.orm.parse.TableManager;
 
 /**
@@ -31,31 +31,36 @@ public class SqlGenerator {
 	private static final String MESSAGE_PAGE_PARAMS_INVALID = "分页参数无效";
 	private static final String MESSAGE_PRIMARY_KEY_UNDEFINED = "主键未定义";
 	
+	private DatabaseType databaseType;
+	
+	public SqlGenerator(DatabaseType databaseType) {
+		this.databaseType = databaseType;
+	}
+	
 	/**
 	 * 生成批量添加实体sql
 	 * @param entities
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static <T> SqlEntry generateBatchInsertSql(T... entities) {
-		Assert.isTrue(ArraysUtils.isNotEmpty(entities), MESSAGE_ENTITIES_IS_EMPTY);
-		Table table = getTable(entities[0]);
+	public <T> SqlEntry generateBatchInsertSql(List<T> entities) {
+		Assert.isTrue(CollectionUtils.isNotEmpty(entities), MESSAGE_ENTITIES_IS_EMPTY);
+		Table table = getTable(entities.get(0));
 		
 		int columnsSize = table.getColumns().size();
 		String columnsPlaceholder = join("?", columnsSize, ",");
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ").append(table.getName()).append("(").append(table.getColumnNameListString()).append(")VALUES");
 		sql.append("(").append(columnsPlaceholder).append(")");
-		int entitiesLength = entities.length;
-		for (int i = 1; i < entitiesLength; i++) {
+		int entitiesSize = entities.size();
+		for (int i = 1; i < entitiesSize; i++) {
 			sql.append(",(").append(columnsPlaceholder).append(")");
 		}
 		
 		//参数
-		Object[] params = new Object[columnsSize * entitiesLength];
+		Object[] params = new Object[columnsSize * entitiesSize];
 		int index = 0;
-		for (int i = 0; i < entitiesLength; i++) {
-			Object[] singleEntityParams = EntityFieldValueUtils.getFieldValues(entities[i]);
+		for (int i = 0; i < entitiesSize; i++) {
+			Object[] singleEntityParams = EntityFieldValueUtils.getFieldValues(entities.get(i));
 			if (singleEntityParams == null) {
 				index += columnsSize - 1;
 				continue;
@@ -74,20 +79,20 @@ public class SqlGenerator {
 	 * @param keys
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static <KEY, T> SqlEntry generateDeleteByKeysSql(Class<T> entityClass, KEY... keys) {
-		Assert.isTrue(ArraysUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
+	public <KEY, T> SqlEntry generateDeleteByKeysSql(Class<T> entityClass, List<KEY> keys) {
+		Assert.isTrue(CollectionUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
 		
 		Table table = getTable(entityClass);
 		
 		StringBuilder sql = new StringBuilder("DELETE FROM ").append(table.getName()).append(" WHERE ").append(table.getPrimaryKey().getName());
-		int keysLength = keys.length;
-		if (keysLength == 1) {
+		int keysSize = keys.size();
+		if (keysSize == 1) {
 			sql.append(" = ").append("?");
 		} else {
-			sql.append(" IN (").append(join("?", keysLength, ",")).append(")");
+			sql.append(" IN (").append(join("?", keysSize, ",")).append(")");
 		}
-		return new SqlEntry(sql.toString(), keys);
+		Object[] keyArray = new Object[keysSize];
+		return new SqlEntry(sql.toString(), keys.toArray(keyArray));
 	}
 	
 	/**
@@ -95,7 +100,7 @@ public class SqlGenerator {
 	 * @param entity
 	 * @return
 	 */
-	public static <KEY, T> SqlEntry generateDeleteSql(T entity) {
+	public <KEY, T> SqlEntry generateDeleteSql(T entity) {
 		Table table = getTable(entity);
 		
 		SqlEntry whereClause = generateWhereClause(table.getColumns(), entity, false);
@@ -110,32 +115,31 @@ public class SqlGenerator {
 	 * @param keys
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static <KEY, T> SqlEntry generateUpdateByKeysSql(T entity, KEY... keys) {
-		Assert.isTrue(ArraysUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
+	public <KEY, T> SqlEntry generateUpdateByKeysSql(T entity, List<KEY> keys) {
+		Assert.isTrue(CollectionUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
 		
 		Table table = getTable(entity);
 		SqlEntry setClause = generateSetClause(entity, table.getColumns());
 		
 		//SQL
-		int keysLength = keys.length;
+		int keysSize = keys.size();
 		StringBuilder sql = new StringBuilder("UPDATE ").append(table.getName()).append(setClause.getSql()).append(" WHERE ").append(table.getPrimaryKey().getName());
-		if (keysLength == 1) {
+		if (keysSize == 1) {
 			sql.append(" = ").append(keys);
 		} else {
-			sql.append(" IN (").append(join("?", keysLength, ",")).append(")");
+			sql.append(" IN (").append(join("?", keysSize, ",")).append(")");
 		}
 		
 		//参数
 		int setClauseParamsLength = setClause.getParams().length;
-		Object[] params = new Object[keysLength + setClauseParamsLength];
+		Object[] params = new Object[keysSize + setClauseParamsLength];
 		int index = 0;
 		for (int i = 0; i < setClauseParamsLength; i++) {
 			params[i] = setClause.getParams()[i];
 			index ++;
 		}
-		for (int i = 0; i < keysLength; i++) {
-			params[index + i] = keys[i];
+		for (int i = 0; i < keysSize; i++) {
+			params[index + i] = keys.get(i);
 		}
 		return new SqlEntry(sql.toString(), params);
 	}
@@ -146,7 +150,7 @@ public class SqlGenerator {
 	 * @param conditionEntity
 	 * @return
 	 */
-	public static <KEY, T> SqlEntry generateUpdateSql(T entity, T conditionEntity) {
+	public <KEY, T> SqlEntry generateUpdateSql(T entity, T conditionEntity) {
 		Assert.isTrue(conditionEntity != null, MESSAGE_ENTITY_IS_NULL);
 		
 		Table table = getTable(entity);
@@ -174,20 +178,20 @@ public class SqlGenerator {
 	 * @param keys
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static <KEY, T> SqlEntry generateSelectByKeysSql(Class<T> entityClass, KEY... keys) {
-		Assert.isTrue(ArraysUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
+	public <KEY, T> SqlEntry generateSelectByKeysSql(Class<T> entityClass, List<KEY> keys) {
+		Assert.isTrue(CollectionUtils.isNotEmpty(keys), MESSAGE_KEYS_IS_EMPTY);
 		
 		Table table = getTable(entityClass);
 		
-		int keysLength = keys.length;
+		int keysSize = keys.size();
 		StringBuilder sql = new StringBuilder("SELECT ").append(table.getColumnNameListString()).append(" FROM ").append(table.getName()).append(" WHERE ").append(table.getPrimaryKey().getName());
-		if (keysLength == 1) {
+		if (keysSize == 1) {
 			sql.append(" = ").append("?").append(" LIMIT 0,1");
 		} else {
-			sql.append(" IN(").append(join("?", keysLength, ",")).append(")");
+			sql.append(" IN(").append(join("?", keysSize, ",")).append(")");
 		}
-		return new SqlEntry(sql.toString(), keys);
+		Object[] keyArray = new Object[keysSize];
+		return new SqlEntry(sql.toString(), keys.toArray(keyArray));
 	}
 	
 	/**
@@ -197,7 +201,7 @@ public class SqlGenerator {
 	 * @param pageSize
 	 * @return
 	 */
-	public static <KEY, T> SqlEntry generateSelectSql(T entity, int currentPage, int pageSize) {
+	public <KEY, T> SqlEntry generateSelectSql(T entity, int currentPage, int pageSize) {
 		Assert.isTrue((currentPage > 0 && pageSize > 0), MESSAGE_PAGE_PARAMS_INVALID);
 		
 		Table table = getTable(entity);
@@ -221,7 +225,7 @@ public class SqlGenerator {
 	 * @param entity
 	 * @return
 	 */
-	public static <KEY, T> SqlEntry generateSelectCountSql(T entity) {
+	public <KEY, T> SqlEntry generateSelectCountSql(T entity) {
 		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
 		
 		Table table = getTable(entity);
@@ -246,7 +250,7 @@ public class SqlGenerator {
 	 * @param allowInvalid
 	 * @return
 	 */
-	private static <T> SqlEntry generateWhereClause(List<Column> columns, T entity, boolean allowInvalid) {
+	private <T> SqlEntry generateWhereClause(List<Column> columns, T entity, boolean allowInvalid) {
 		StringBuilder whereCondition = new StringBuilder();
 		List<Object> params = ListUtils.newArrayList();
 		int counter = 0;
@@ -284,7 +288,7 @@ public class SqlGenerator {
 	 * @param columns
 	 * @return
 	 */
-	private static <T> SqlEntry generateSetClause(T entity, List<Column> columns) {
+	private <T> SqlEntry generateSetClause(T entity, List<Column> columns) {
 		StringBuilder setClause = new StringBuilder();
 		int counter = 0;
 		List<Object> params = ListUtils.newArrayList();
@@ -317,7 +321,7 @@ public class SqlGenerator {
 	 * @param seperator
 	 * @return
 	 */
-	private static String join(String text, int count, String seperator) {
+	private String join(String text, int count, String seperator) {
 		StringBuilder buffer = new StringBuilder(text.length() * count);
 		buffer.append(text);
 		for (int i = 1; i < count; i++) {
@@ -331,7 +335,7 @@ public class SqlGenerator {
 	 * @param entity
 	 * @return
 	 */
-	private static <T> Table getTable(T entity) {
+	private <T> Table getTable(T entity) {
 		//校验实体对象是否有效
 		Assert.isTrue(entity != null, MESSAGE_ENTITY_IS_NULL);
 		
@@ -343,7 +347,7 @@ public class SqlGenerator {
 	 * @param entityClass
 	 * @return
 	 */
-	private static <T> Table getTable(Class<T> entityClass) {
+	private <T> Table getTable(Class<T> entityClass) {
 		//校验根据实体是否能得到表对象
 		Table table = TableManager.getInstance().getTable(entityClass);
 		Assert.isTrue(table != null, MESSAGE_TABLE_IS_NULL);
@@ -355,5 +359,9 @@ public class SqlGenerator {
 		Assert.isTrue(table.getPrimaryKey() != null, MESSAGE_PRIMARY_KEY_UNDEFINED);
 		
 		return table;
+	}
+	
+	public DatabaseType getDatabaseType() {
+		return databaseType;
 	}
 }

@@ -7,83 +7,106 @@ import java.util.List;
 
 /**
  * SqlSession
- *
+ * 
  * @author lijunlin
+ *
+ * @param <T>
+ * @param <KEY>
  */
-public interface SqlSession extends Closeable {
+public interface SqlSession<T, KEY extends Serializable> extends Closeable {
 
+	 /**
+     * 添加对象,返回对象主键
+     * @param entity
+     * @return
+     */
+	KEY insertReturnPK(T entity);
+	
 	/**
-	 * 添加
+	 * 批量添加对象
 	 * @param entities
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	<T> int insert(T... entities);
-	
+	int insert(List<T> entities);
+    
 	/**
-	 * 根据主键Key列表批量删除
+	 * 根据主键删除对象
 	 * @param entityClass
-	 * @param keys
+	 * @param key
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	<KEY extends Serializable, T> int deleteByKeys(Class<T> entityClass, KEY... keys);
+	int deleteByKey(Class<T> entityClass, KEY key);
 	
-	/**
-	 * 删除
-	 * @param entity
-	 * @return
-	 */
-	<T> int delete(T entity);
-	
-	/**
-	 * 根据主键列表批量更新
-	 * @param entity
-	 * @param keys
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	<KEY extends Serializable, T> int updateByKeys(T entity, KEY... keys);
-	
-	/**
-	 * 更新
-	 * @param entity
-	 * @param condition
-	 * @return
-	 */
-	<T> int update(T entity, T condition);
-	
-	/**
-	 * 根据主键列表查询
-	 * @param entityClass
-	 * @param keys
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	<KEY extends Serializable, T> List<T> selectByKeys(Class<T> entityClass, KEY... keys);
-	
-	/**
-	 * 查询单个实体
-	 * @param entity
-	 * @return
-	 */
-	<T> T selectOne(T entity);
-	
-	/**
-	 * 查询实体列表
-	 * @param entity
-	 * @param currentPage
-	 * @param pageSize
-	 * @return
-	 */
-	<T> List<T> selectList(T entity, int currentPage, int pageSize);
-	
-	/**
-	 * 查询实体数量
-	 * @param entity
-	 * @return
-	 */
-	<T> int selectCount(T entity);
+    /**
+     * 根据主键列表批量删除对象
+     * @param entityClass
+     * @param keys
+     * @return
+     */
+	int deleteByKeys(Class<T> entityClass, List<KEY> keys);
+    
+    /**
+     * 删除对象,只要不为NULL与空则为条件
+     * @param condition
+     * @return
+     */
+    int delete(T condition);
+
+    /**
+     * 根据主键更新对象
+     * @param entity
+     * @param key
+     * @return
+     */
+    int updateByKey(T entity, KEY key);
+    
+    /**
+     * 根据主键列表更新对象
+     * @param entity
+     * @param keys
+     * @return
+     */
+    int updateByKeys(T entity, List<KEY> keys);
+    
+    /**
+     * 更新对象
+     * @param entity 待更新对象
+     * @param condition 更新条件,不为空字段为条件
+     * @return
+     */
+    int update(T entity, T condition);
+    
+    /**
+     * 根据主键获取对象
+     * @param entityClass
+     * @param key
+     * @return
+     */
+    T selectByKey(Class<T> entityClass, KEY key);
+    
+    /**
+     * 根据主键列表获取对象
+     * @param entityClass
+     * @param keys
+     * @return
+     */
+    List<T> selectListByKeys(Class<T> entityClass, List<KEY> keys);
+    
+    /**
+     * 查询对象,只要不为NULL与空则为条件
+     * @param condition
+     * @param currentPage 当前页码
+     * @param pageSize 每页大小
+     * @return
+     */
+    List<T> selectList(T condition, int currentPage, int pageSize);
+    
+    /**
+     * 查询对象总数,只要不为NULL与空则为条件
+     * @param condition
+     * @return
+     */
+    int selectListCount(T condition);
 
 	void commit();
 

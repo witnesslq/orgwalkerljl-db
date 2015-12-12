@@ -2,6 +2,8 @@ package org.walkerljl.db.orm.session;
 
 import javax.sql.DataSource;
 
+import org.walkerljl.db.orm.enums.DatabaseType;
+
 /**
  *
  * Configuration
@@ -11,6 +13,7 @@ import javax.sql.DataSource;
 public class Configuration {
 
 	private DataSource dataSource;
+	private DatabaseType databaseType;
 	
 	public Configuration() {}
 
@@ -20,5 +23,13 @@ public class Configuration {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public DatabaseType getDatabaseType() {
+		return databaseType;
+	}
+
+	public void setDatabaseType(DatabaseType databaseType) {
+		this.databaseType = databaseType;
 	}
 }

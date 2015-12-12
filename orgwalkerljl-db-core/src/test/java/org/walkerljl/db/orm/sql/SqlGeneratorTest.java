@@ -46,12 +46,12 @@ public class SqlGeneratorTest {
 			users[i] = user;
 		}
 
-		print("generateBatchInsertSql", SqlGenerator.generateBatchInsertSql(users));
+		//print("generateBatchInsertSql", SqlGenerator.generateBatchInsertSql(users));
 	}
 
 	@Test
 	public void generateDeleteByKeysSql() {
-		print("generateDeleteByKeysSql", SqlGenerator.generateDeleteByKeysSql(User.class, new Integer[]{1,2,3,4,5}));
+		//print("generateDeleteByKeysSql", SqlGenerator.generateDeleteByKeysSql(User.class, new Integer[]{1,2,3,4,5}));
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class SqlGeneratorTest {
 		condition.setId(100L);
 		condition.setUserId("userId");
 		condition.setUserName("userName");
-		print("generateDeleteSql", SqlGenerator.generateDeleteSql(condition));
+		//print("generateDeleteSql", SqlGenerator.generateDeleteSql(condition));
 	}
 
 	@Test
@@ -68,7 +68,7 @@ public class SqlGeneratorTest {
 		//print("generateUpdateByKeysSql", SqlGenerator.generateUpdateByKeysSql(new User(), 1));
 		User modifiedEntity = new User();
 		modifiedEntity.setUserName("aliasUserName");
-		print("generateUpdateByKeysSql", SqlGenerator.generateUpdateByKeysSql(modifiedEntity, new Integer[]{1,2,3,4,5}));
+		//print("generateUpdateByKeysSql", SqlGenerator.generateUpdateByKeysSql(modifiedEntity, new Integer[]{1,2,3,4,5}));
 	}
 
 	@Test
@@ -78,22 +78,22 @@ public class SqlGeneratorTest {
 		
 		User modifiedCondition = new User();
 		modifiedCondition.setUserId("userId");
-		print("generateUpdateSql", SqlGenerator.generateUpdateSql(modifiedEntity, modifiedCondition));
+		//print("generateUpdateSql", SqlGenerator.generateUpdateSql(modifiedEntity, modifiedCondition));
 	}
 
 	@Test
 	public void generateSelectByKeysSql() {
-		print("generateSelectByKeysSql", SqlGenerator.generateSelectByKeysSql(User.class, new Integer[]{1,2,3,4,5}));
+		//print("generateSelectByKeysSql", SqlGenerator.generateSelectByKeysSql(User.class, new Integer[]{1,2,3,4,5}));
 	}
 
 	@Test
 	public void generateSelectSql() {
-		print("generateSelectSql", SqlGenerator.generateSelectSql(new User(), 1, 10));
+		//print("generateSelectSql", SqlGenerator.generateSelectSql(new User(), 1, 10));
 	}
 	
 	@Test
 	public void generateSelectCountSql() {
-		print("generateSelectCountSql", SqlGenerator.generateSelectCountSql(new User()));
+		//print("generateSelectCountSql", SqlGenerator.generateSelectCountSql(new User()));
 	}
 
 	private void print(String messagePrefix, SqlEntry sqlEntry) {

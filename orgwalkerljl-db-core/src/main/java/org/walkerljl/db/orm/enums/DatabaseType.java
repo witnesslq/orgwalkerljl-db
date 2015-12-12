@@ -1,4 +1,5 @@
 package org.walkerljl.db.orm.enums;
+
 /**
  *
  * DatabaseType
@@ -18,6 +19,18 @@ public enum DatabaseType {
 	private DatabaseType(String value, String name) {
 		this.value = value;
 		this.name = name;
+	}
+	
+	public static DatabaseType getType(String value) {
+		if (value == null || "".equals(value)) {
+			return null;
+		}
+		for (DatabaseType type : DatabaseType.values()) {
+			if (type.getValue().equals(value)) {
+				return type;
+			}
+		}
+		return null;
 	}
 	
 	public String getValue() {

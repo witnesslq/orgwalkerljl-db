@@ -20,7 +20,7 @@ import org.walkerljl.log.LoggerFactory;
 public class TableParser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TableParser.class);
-	private static final String KEY_WRAP = "`";
+	private static final String KEY_WRAP = "";//"`";
 	
 	/**
 	 * 解析

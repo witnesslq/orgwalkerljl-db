@@ -211,7 +211,7 @@ public class DefaultExecutor implements Executor {
 
     @Override
     public int queryCount(String sql, Object... params) {
-    	long result;
+    	Long result;
         try {
             result = queryRunner.query(sql, new ScalarHandler<Long>("count(*)"), params);
         } catch (SQLException e) {
@@ -220,7 +220,7 @@ public class DefaultExecutor implements Executor {
         } finally {
         	printSQL(sql, params);
         }
-        return (int)result;
+        return (result == null ? 0 : result.intValue());
     }
 
     @Override
