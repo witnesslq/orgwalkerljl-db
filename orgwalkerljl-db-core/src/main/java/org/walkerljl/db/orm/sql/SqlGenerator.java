@@ -231,7 +231,7 @@ public class SqlGenerator {
 		Table table = getTable(entity);
 		SqlEntry whereClause = generateWhereClause(table.getColumns(), entity, true);
 		
-		StringBuilder sql = new StringBuilder("SELECT COUNT(*)").append(" FROM ").append(table.getName());
+		StringBuilder sql = new StringBuilder("SELECT COUNT(1)").append(" FROM ").append(table.getName());
 		if (whereClause != null) {
 			sql.append(whereClause.getSql());
 		}

@@ -213,7 +213,7 @@ public class DefaultExecutor implements Executor {
     public int queryCount(String sql, Object... params) {
     	Long result;
         try {
-            result = queryRunner.query(sql, new ScalarHandler<Long>("count(*)"), params);
+            result = queryRunner.query(sql, new ScalarHandler<Long>("count(1)"), params);
         } catch (SQLException e) {
         	LOG.error(MESSAGE_QUERY_FAILURE, e);
             throw new RuntimeException(e);

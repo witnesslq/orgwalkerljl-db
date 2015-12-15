@@ -20,7 +20,6 @@ import org.walkerljl.log.LoggerFactory;
 public class TableParser {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TableParser.class);
-	private static final String KEY_WRAP = "";//"`";
 	
 	/**
 	 * 解析
@@ -28,7 +27,7 @@ public class TableParser {
 	 * @return
 	 */
 	public static Table parse(Class<?> entityClass) {
-		return parseTable(entityClass);
+		return TableParser.parseTable(entityClass);
 	}
 	
 	/**
@@ -37,7 +36,7 @@ public class TableParser {
 	 * @return
 	 */
 	public static String parseTableName(Class<?> entityClass) {
-		Table table = parseSimpleTable(entityClass);
+		Table table = TableParser.parseSimpleTable(entityClass);
 		if (table == null) {
 			return null;
 		}
@@ -50,18 +49,18 @@ public class TableParser {
 	 * @return
 	 */
 	private static Table parseTable(Class<?> entityClass) {
-		Table table = parseSimpleTable(entityClass);
+		Table table = TableParser.parseSimpleTable(entityClass);
 		if (table == null) {
 			return null;
 		}
 		
-		List<Class<?>> supperClasses = getAllSupperClasses(entityClass);
+		List<Class<?>> supperClasses = TableParser.getAllSupperClasses(entityClass);
 		if (CollectionUtils.isNotEmpty(supperClasses)) {
 			for (Class<?> supperClass : supperClasses) {
-				parseColumn(table, supperClass);
+				TableParser.parseColumn(table, supperClass);
 			}
 		}
-		parseColumn(table, entityClass);
+		TableParser.parseColumn(table, entityClass);
 		return table;
 	}
 	
@@ -87,7 +86,7 @@ public class TableParser {
 		}
 		
 		Table table = new Table();
-		table.setName(KEY_WRAP + tableName + KEY_WRAP);
+		table.setName(tableName);
 		table.setComment(entity.comment());
 		return table;
 	}
@@ -129,7 +128,7 @@ public class TableParser {
 			Column column = new Column();
 			columns.add(column);
 			column.setPrimaryKey(columnAnnotation.key());
-			column.setName(KEY_WRAP + columnName + KEY_WRAP);
+			column.setName(columnName);
 			column.setFieldName(field.getName());
 			column.setJavaType(field.getType());
 			
