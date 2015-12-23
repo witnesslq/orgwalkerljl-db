@@ -125,7 +125,7 @@ public class SqlGenerator {
 		int keysSize = keys.size();
 		StringBuilder sql = new StringBuilder("UPDATE ").append(table.getName()).append(setClause.getSql()).append(" WHERE ").append(table.getPrimaryKey().getName());
 		if (keysSize == 1) {
-			sql.append(" = ").append(keys);
+			sql.append(" = ?");
 		} else {
 			sql.append(" IN (").append(join("?", keysSize, ",")).append(")");
 		}
@@ -212,6 +212,7 @@ public class SqlGenerator {
 		if (whereClause != null) {
 			sql.append(whereClause.getSql());
 		}
+		sql.append(" ORDER BY ").append(table.getPrimaryKey().getName()).append(" DESC");
 		sql.append(" LIMIT ").append(page.getStartIndex()).append(",").append(page.getPageSize());
 		if (whereClause == null) {
 			return new SqlEntry(sql.toString(), null);
