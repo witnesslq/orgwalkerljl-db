@@ -265,7 +265,7 @@ public class SqlGenerator {
 			} else {
 				whereCondition.append(" AND ");
 			}
-			whereCondition.append(column.getName()).append(" = ?");			
+			whereCondition.append("`").append(column.getName()).append("` = ?");			
 			params.add(entityFieldValue);
 			counter ++;
 		}
@@ -303,7 +303,7 @@ public class SqlGenerator {
 			} else {
 				setClause.append(",");
 			}
-			setClause.append(column.getName()).append(" = ?");			
+			setClause.append("`").append(column.getName()).append("` = ?");			
 			params.add(entityFieldValue);
 			counter ++;
 		}
