@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author lijunlin
  */
-public class Column implements Serializable {
+public class Column implements Comparable<Column>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -219,5 +219,10 @@ public class Column implements Serializable {
 	 */
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
+	}
+
+	@Override
+	public int compareTo(Column another) {
+		return name.compareTo(another.getName());
 	}
 }

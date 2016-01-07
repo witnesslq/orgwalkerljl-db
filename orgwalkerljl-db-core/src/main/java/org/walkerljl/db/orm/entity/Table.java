@@ -19,7 +19,7 @@ import org.walkerljl.commons.util.StringPool;
  */
 public class Table {
 
-	private static final String KEY_WRAP = "`";
+	private static final String KEY_WRAPPER = "`";
 
 	/** 表名*/
 	private String name;
@@ -61,7 +61,7 @@ public class Table {
 			if (columnToPropertyMap == null) {
 				return StringPool.EMPTY;
 			}
-			return CollectionUtils.wrap(columnToPropertyMap.keySet(), KEY_WRAP, KEY_WRAP, ",");
+			return CollectionUtils.wrap(columnToPropertyMap.keySet(), KEY_WRAPPER, KEY_WRAPPER, ",");
 		} else {
 			return columnNameListString;
 		}

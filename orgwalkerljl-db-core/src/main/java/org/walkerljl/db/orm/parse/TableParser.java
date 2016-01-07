@@ -61,6 +61,9 @@ public class TableParser {
 			}
 		}
 		TableParser.parseColumn(table, entityClass);
+		
+		//字段排序
+		CollectionUtils.sort(table.getColumns());
 		return table;
 	}
 	
