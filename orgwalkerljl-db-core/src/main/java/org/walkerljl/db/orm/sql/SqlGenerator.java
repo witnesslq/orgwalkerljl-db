@@ -21,6 +21,7 @@ import org.walkerljl.db.orm.parse.TableManager;
  */
 public class SqlGenerator {
 	
+	private static final String KEY_WRAPPER = "`";
 	private static final String MESSAGE_ENTITY_IS_NULL = "实体为null";
 	private static final String MESSAGE_ENTITIES_IS_EMPTY = "实体列表为空";
 	private static final String MESSAGE_TABLE_IS_NULL = "表为null";
@@ -84,7 +85,8 @@ public class SqlGenerator {
 		
 		Table table = getTable(entityClass);
 		
-		StringBuilder sql = new StringBuilder("DELETE FROM ").append(table.getName()).append(" WHERE ").append(table.getPrimaryKey().getName());
+		StringBuilder sql = new StringBuilder("DELETE FROM ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER).append(" WHERE ");
+		sql.append(KEY_WRAPPER).append(table.getPrimaryKey().getName()).append(KEY_WRAPPER);
 		int keysSize = keys.size();
 		if (keysSize == 1) {
 			sql.append(" = ").append("?");
@@ -105,7 +107,7 @@ public class SqlGenerator {
 		
 		SqlEntry whereClause = generateWhereClause(table.getColumns(), entity, false);
 		
-		StringBuilder sql = new StringBuilder("DELETE FROM ").append(table.getName()).append(whereClause.getSql());
+		StringBuilder sql = new StringBuilder("DELETE FROM ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER).append(whereClause.getSql());
 		return new SqlEntry(sql.toString(), whereClause.getParams());
 	}
 	
@@ -123,7 +125,8 @@ public class SqlGenerator {
 		
 		//SQL
 		int keysSize = keys.size();
-		StringBuilder sql = new StringBuilder("UPDATE ").append(table.getName()).append(setClause.getSql()).append(" WHERE ").append(table.getPrimaryKey().getName());
+		StringBuilder sql = new StringBuilder("UPDATE ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER);
+		sql.append(setClause.getSql()).append(" WHERE ").append(KEY_WRAPPER).append(table.getPrimaryKey().getName()).append(KEY_WRAPPER);
 		if (keysSize == 1) {
 			sql.append(" = ?");
 		} else {
@@ -157,7 +160,7 @@ public class SqlGenerator {
 		SqlEntry setClause = generateSetClause(entity, table.getColumns());
 		SqlEntry whereClause = generateWhereClause(table.getColumns(), conditionEntity, false);
 		
-		StringBuilder sql = new StringBuilder("UPDATE ").append(table.getName()).append(setClause.getSql()).append(whereClause.getSql());
+		StringBuilder sql = new StringBuilder("UPDATE ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER).append(setClause.getSql()).append(whereClause.getSql());
 		int setClauseParamsLength = setClause.getParams().length;
 		int whereClauseParamsLength = whereClause.getParams().length;
 		Object[] params = new Object[setClauseParamsLength + whereClauseParamsLength];
@@ -184,7 +187,8 @@ public class SqlGenerator {
 		Table table = getTable(entityClass);
 		
 		int keysSize = keys.size();
-		StringBuilder sql = new StringBuilder("SELECT ").append(table.getColumnNameListString()).append(" FROM ").append(table.getName()).append(" WHERE ").append(table.getPrimaryKey().getName());
+		StringBuilder sql = new StringBuilder("SELECT ").append(table.getColumnNameListString()).append(" FROM ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER);
+		sql.append(" WHERE ").append(KEY_WRAPPER).append(table.getPrimaryKey().getName()).append(KEY_WRAPPER);
 		if (keysSize == 1) {
 			sql.append(" = ").append("?").append(" LIMIT 0,1");
 		} else {
@@ -208,11 +212,11 @@ public class SqlGenerator {
 		SqlEntry whereClause = generateWhereClause(table.getColumns(), entity, true);
 		
 		Page<T> page = new Page<T>(currentPage, pageSize);
-		StringBuilder sql = new StringBuilder("SELECT ").append(table.getColumnNameListString()).append(" FROM ").append(table.getName());
+		StringBuilder sql = new StringBuilder("SELECT ").append(table.getColumnNameListString()).append(" FROM ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER);
 		if (whereClause != null) {
 			sql.append(whereClause.getSql());
 		}
-		sql.append(" ORDER BY ").append(table.getPrimaryKey().getName()).append(" DESC");
+		sql.append(" ORDER BY ").append(KEY_WRAPPER).append(table.getPrimaryKey().getName()).append(KEY_WRAPPER).append(" DESC");
 		sql.append(" LIMIT ").append(page.getStartIndex()).append(",").append(page.getPageSize());
 		if (whereClause == null) {
 			return new SqlEntry(sql.toString(), null);
@@ -232,7 +236,7 @@ public class SqlGenerator {
 		Table table = getTable(entity);
 		SqlEntry whereClause = generateWhereClause(table.getColumns(), entity, true);
 		
-		StringBuilder sql = new StringBuilder("SELECT COUNT(1)").append(" FROM ").append(table.getName());
+		StringBuilder sql = new StringBuilder("SELECT COUNT(1)").append(" FROM ").append(KEY_WRAPPER).append(table.getName()).append(KEY_WRAPPER);
 		if (whereClause != null) {
 			sql.append(whereClause.getSql());
 		}
@@ -265,7 +269,7 @@ public class SqlGenerator {
 			} else {
 				whereCondition.append(" AND ");
 			}
-			whereCondition.append(column.getName()).append(" = ?");			
+			whereCondition.append(KEY_WRAPPER).append(column.getName()).append(KEY_WRAPPER).append(" = ?");			
 			params.add(entityFieldValue);
 			counter ++;
 		}
@@ -303,7 +307,7 @@ public class SqlGenerator {
 			} else {
 				setClause.append(",");
 			}
-			setClause.append(column.getName()).append(" = ?");			
+			setClause.append(KEY_WRAPPER).append(column.getName()).append(KEY_WRAPPER).append(" = ?");			
 			params.add(entityFieldValue);
 			counter ++;
 		}
