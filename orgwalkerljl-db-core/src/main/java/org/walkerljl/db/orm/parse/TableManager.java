@@ -51,7 +51,7 @@ public class TableManager {
 							tableCache.put(entityClass, table);
 						}
 						if (LOGGER.isDebugEnabled()) {
-							LOGGER.debug(String.format("解析实体:%s", entityClass));
+							LOGGER.debug(String.format("Parse entity:%s", entityClass));
 						}
 					}
 				} finally {
