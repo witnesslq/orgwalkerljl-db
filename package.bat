@@ -7,7 +7,7 @@ set CLASSPATH=.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar
 set PATH=%JAVA_HOME%\bin;%PATH%
 
 echo processing ...
-call mvn clean install -Dmaven.test.skip=true
+call mvn clean package install -Dmaven.test.skip=true
 
 endlocal
 echo ending ...
