@@ -15,8 +15,8 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
 		<org.walkerljl.commons.version>1.1.0-SNAPSHOT</org.walkerljl.commons.version>
-		<org.walkerljl.config.version>>1.1.0-SNAPSHOT</org.walkerljl.config.version>
-		<org.walkerljl.log.version>>1.1.0-SNAPSHOT</org.walkerljl.log.version>
+		<org.walkerljl.config.version>1.1.0-SNAPSHOT</org.walkerljl.config.version>
+		<org.walkerljl.log.version>1.1.0-SNAPSHOT</org.walkerljl.log.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
