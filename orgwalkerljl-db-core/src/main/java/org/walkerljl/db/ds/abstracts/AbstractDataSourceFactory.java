@@ -13,10 +13,10 @@ import org.walkerljl.db.ds.DataSourceFactory;
  */
 public abstract class AbstractDataSourceFactory<T extends DataSource> implements DataSourceFactory {
 
-    protected final String driver = ConfiguratorFactory.getInstance().getPropertyAsString("org.walkerljl.db.jdbc.driver");
-    protected final String url = ConfiguratorFactory.getInstance().getPropertyAsString("org.walkerljl.db.jdbc.url");
-    protected final String username = ConfiguratorFactory.getInstance().getPropertyAsString("org.walkerljl.db.jdbc.username");
-    protected final String password = ConfiguratorFactory.getInstance().getPropertyAsString("org.walkerljl.db.jdbc.password");
+    protected final String driver = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.driver");
+    protected final String url = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.url");
+    protected final String username = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.username");
+    protected final String password = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.password");
 
     @Override
     public final T getDataSource() {
