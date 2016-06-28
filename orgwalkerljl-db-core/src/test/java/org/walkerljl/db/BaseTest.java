@@ -1,8 +1,8 @@
 package org.walkerljl.db;
 
 import org.junit.Test;
-import org.walkerljl.log.Logger;
-import org.walkerljl.log.LoggerFactory;
+import org.walkerljl.commons.log.Logger;
+import org.walkerljl.commons.log.LoggerFactory;
 
 /**
  *

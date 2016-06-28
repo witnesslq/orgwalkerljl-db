@@ -1,11 +1,9 @@
 package org.walkerljl.db.orm;
 
-import java.util.Date;
-
 import org.junit.Before;
-import org.walkerljl.config.Configurator;
-import org.walkerljl.config.ConfiguratorFactory;
-import org.walkerljl.config.impl.readonly.PropertiesReadonlyConfigurator;
+import org.walkerljl.commons.config.Configurator;
+import org.walkerljl.commons.config.ConfiguratorFactory;
+import org.walkerljl.commons.config.impl.readonly.PropertiesReadonlyConfigurator;
 import org.walkerljl.db.BaseTest;
 import org.walkerljl.db.ds.DataSourceFactory;
 import org.walkerljl.db.orm.entity.identity.User;

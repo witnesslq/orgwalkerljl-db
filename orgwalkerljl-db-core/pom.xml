@@ -18,14 +18,6 @@
 			<groupId>org.walkerljl</groupId>
 			<artifactId>orgwalkerljl-commons-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.walkerljl</groupId>
-			<artifactId>orgwalkerljl-config-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.walkerljl</groupId>
-			<artifactId>orgwalkerljl-log-core</artifactId>
-		</dependency>
 
 		<!-- test -->
 		<dependency>

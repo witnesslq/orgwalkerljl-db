@@ -15,8 +15,6 @@
 	<properties>
 		<jdk.version>1.8</jdk.version>
 		<org.walkerljl.commons.version>1.1.0-SNAPSHOT</org.walkerljl.commons.version>
-		<org.walkerljl.config.version>1.1.0-SNAPSHOT</org.walkerljl.config.version>
-		<org.walkerljl.log.version>1.1.0-SNAPSHOT</org.walkerljl.log.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -42,16 +40,6 @@
 				<groupId>org.walkerljl</groupId>
 				<artifactId>orgwalkerljl-commons-core</artifactId>
 				<version>${org.walkerljl.commons.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.walkerljl</groupId>
-				<artifactId>orgwalkerljl-config-core</artifactId>
-				<version>${org.walkerljl.config.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.walkerljl</groupId>
-				<artifactId>orgwalkerljl-log-core</artifactId>
-				<version>${org.walkerljl.log.version}</version>
 			</dependency>
 			
 			<!-- Datasource -->

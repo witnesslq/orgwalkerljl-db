@@ -1,14 +1,14 @@
 package org.walkerljl.db.orm.sql.builder;
 
-import java.util.List;
-
 import org.walkerljl.commons.collection.CollectionUtils;
+import org.walkerljl.commons.log.Logger;
+import org.walkerljl.commons.log.LoggerFactory;
 import org.walkerljl.commons.util.ReflectUtils;
 import org.walkerljl.db.orm.entity.Column;
 import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.entity.Table;
-import org.walkerljl.log.Logger;
-import org.walkerljl.log.LoggerFactory;
+
+import java.util.List;
 
 /**
  *

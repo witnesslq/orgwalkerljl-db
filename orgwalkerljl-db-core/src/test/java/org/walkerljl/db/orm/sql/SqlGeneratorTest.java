@@ -1,12 +1,12 @@
 package org.walkerljl.db.orm.sql;
 
-import java.util.Date;
-
 import org.junit.Test;
+import org.walkerljl.commons.log.Logger;
+import org.walkerljl.commons.log.LoggerFactory;
 import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.entity.identity.User;
-import org.walkerljl.log.Logger;
-import org.walkerljl.log.LoggerFactory;
+
+import java.util.Date;
 
 /**
  *

@@ -1,9 +1,9 @@
 package org.walkerljl.db.ds.abstracts;
 
-import javax.sql.DataSource;
-
-import org.walkerljl.config.ConfiguratorFactory;
+import org.walkerljl.commons.config.ConfiguratorFactory;
 import org.walkerljl.db.ds.DataSourceFactory;
+
+import javax.sql.DataSource;
 
 /**
  * 

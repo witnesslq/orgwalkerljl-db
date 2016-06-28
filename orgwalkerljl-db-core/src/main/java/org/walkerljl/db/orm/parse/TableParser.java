@@ -1,15 +1,15 @@
 package org.walkerljl.db.orm.parse;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.walkerljl.commons.collection.CollectionUtils;
+import org.walkerljl.commons.log.Logger;
+import org.walkerljl.commons.log.LoggerFactory;
 import org.walkerljl.db.api.annotation.Entity;
 import org.walkerljl.db.orm.entity.Column;
 import org.walkerljl.db.orm.entity.Table;
-import org.walkerljl.log.Logger;
-import org.walkerljl.log.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
