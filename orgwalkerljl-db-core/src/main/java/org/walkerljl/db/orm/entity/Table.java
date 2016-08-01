@@ -5,12 +5,12 @@
  */
 package org.walkerljl.db.orm.entity;
 
+import org.walkerljl.commons.util.CollectionUtils;
+import org.walkerljl.commons.util.StringPool;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.walkerljl.commons.collection.CollectionUtils;
-import org.walkerljl.commons.util.StringPool;
 
 /**
  * 表

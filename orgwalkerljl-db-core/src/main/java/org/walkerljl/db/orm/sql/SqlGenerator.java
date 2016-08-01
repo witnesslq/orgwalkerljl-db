@@ -1,10 +1,8 @@
 package org.walkerljl.db.orm.sql;
 
-import java.util.List;
-
-import org.walkerljl.commons.collection.CollectionUtils;
-import org.walkerljl.commons.collection.ListUtils;
 import org.walkerljl.commons.util.Assert;
+import org.walkerljl.commons.util.CollectionUtils;
+import org.walkerljl.commons.util.ListUtils;
 import org.walkerljl.db.orm.EntityFieldValueUtils;
 import org.walkerljl.db.orm.Page;
 import org.walkerljl.db.orm.entity.Column;
@@ -12,6 +10,8 @@ import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.entity.Table;
 import org.walkerljl.db.orm.enums.DatabaseType;
 import org.walkerljl.db.orm.parse.TableManager;
+
+import java.util.List;
 
 /**
  * 

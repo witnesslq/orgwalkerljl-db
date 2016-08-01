@@ -13,23 +13,22 @@ import javax.sql.DataSource;
  */
 public abstract class AbstractDataSourceFactory<T extends DataSource> implements DataSourceFactory {
 
-    protected final String driver = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.driver");
-    protected final String url = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.url");
-    protected final String username = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.username");
-    protected final String password = ConfiguratorFactory.getIns().getAsString("org.walkerljl.db.jdbc.password");
-
     @Override
     public final T getDataSource() {
         // 创建数据源对象
         T ds = createDataSource();
         // 设置基础属性
-        setDriver(ds, driver);
-        setUrl(ds, url);
-        setUsername(ds, username);
-        setPassword(ds, password);
+        setDriver(ds, getPropertyAsString("org.walkerljl.db.jdbc.driver"));
+        setUrl(ds, getPropertyAsString("org.walkerljl.db.jdbc.url"));
+        setUsername(ds, getPropertyAsString("org.walkerljl.db.jdbc.username"));
+        setPassword(ds, getPropertyAsString("org.walkerljl.db.jdbc.password"));
         // 设置高级属性
         setAdvancedConfig(ds);
         return ds;
+    }
+
+    protected String getPropertyAsString(String key) {
+        return ConfiguratorFactory.getInstance().getStdConfigurator().getAsString(key);
     }
 
     public abstract T createDataSource();

@@ -1,9 +1,9 @@
 package org.walkerljl.db.orm.executor.defaults;
 
-import org.walkerljl.commons.collection.ArraysUtils;
-import org.walkerljl.commons.collection.MapUtils;
 import org.walkerljl.commons.log.Logger;
 import org.walkerljl.commons.log.LoggerFactory;
+import org.walkerljl.commons.util.ArraysUtils;
+import org.walkerljl.commons.util.MapUtils;
 import org.walkerljl.db.dbutil.BasicRowProcessor;
 import org.walkerljl.db.dbutil.BeanProcessor;
 import org.walkerljl.db.dbutil.QueryRunner;

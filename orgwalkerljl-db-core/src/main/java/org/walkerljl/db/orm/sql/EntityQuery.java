@@ -5,12 +5,13 @@
  */
 package org.walkerljl.db.orm.sql;
 
+import org.walkerljl.commons.util.SetUtils;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.walkerljl.commons.collection.SetUtils;
 
 /**
  * EntityQuery 

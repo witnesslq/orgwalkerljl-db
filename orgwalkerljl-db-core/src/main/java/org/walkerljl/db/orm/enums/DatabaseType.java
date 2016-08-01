@@ -11,33 +11,76 @@ public enum DatabaseType {
 	/**
 	 * MySQL
 	 */
-	MYSQL("mysql", "MySQL");
-	
-	private String value;
-	private String name;
-	
-	private DatabaseType(String value, String name) {
+	MYSQL(1, "MySQL"),
+
+	/**
+	 * ORACLE
+	 */
+	ORACLE(2, "ORACLE"),
+
+	/**
+	 * SQLSERVER
+	 */
+	SQLSERVER(3, "SQLSERVER");
+
+	/**
+	 * 类型值
+	 */
+	private final Integer value;
+	/**
+	 * 类型名称
+	 */
+	private final String name;
+
+	/**
+	 * 私有构造函数
+	 *
+	 * @param value 类型值
+	 * @param name  类型名称
+	 */
+	private DatabaseType(Integer value, String name) {
 		this.value = value;
 		this.name = name;
 	}
-	
-	public static DatabaseType getType(String value) {
-		if (value == null || "".equals(value)) {
+
+	/**
+	 * 获取类型值
+	 *
+	 * @return
+	 */
+	public Integer getValue() {
+		return value;
+	}
+
+	/**
+	 * 获取类型名称
+	 *
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * 获取类型对象
+	 *
+	 * @param value
+	 * @return
+	 */
+	public static DatabaseType getType(Integer value) {
+		if (value == null || value.intValue() == 0) {
 			return null;
 		}
-		for (DatabaseType type : DatabaseType.values()) {
-			if (type.getValue().equals(value)) {
-				return type;
+		for (DatabaseType element : DatabaseType.values()) {
+			if (element.getValue().intValue() == value.intValue()) {
+				return element;
 			}
 		}
 		return null;
 	}
-	
-	public String getValue() {
-		return value;
-	}
 
-	public String getName() {
-		return name;
+	@Override
+	public String toString() {
+		return getValue().toString();
 	}
 }

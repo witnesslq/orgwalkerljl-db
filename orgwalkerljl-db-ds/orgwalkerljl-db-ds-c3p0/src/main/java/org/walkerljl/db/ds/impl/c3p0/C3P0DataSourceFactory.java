@@ -1,12 +1,11 @@
 package org.walkerljl.db.ds.impl.c3p0;
 
-import java.beans.PropertyVetoException;
-
-import org.walkerljl.db.ds.abstracts.AbstractDataSourceFactory;
-import org.walkerljl.log.Logger;
-import org.walkerljl.log.LoggerFactory;
-
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.walkerljl.commons.log.Logger;
+import org.walkerljl.commons.log.LoggerFactory;
+import org.walkerljl.db.ds.abstracts.AbstractDataSourceFactory;
+
+import java.beans.PropertyVetoException;
 
 /**
  *

@@ -1,8 +1,8 @@
 package org.walkerljl.db.orm.sql.builder;
 
-import org.walkerljl.commons.collection.CollectionUtils;
 import org.walkerljl.commons.log.Logger;
 import org.walkerljl.commons.log.LoggerFactory;
+import org.walkerljl.commons.util.CollectionUtils;
 import org.walkerljl.commons.util.ReflectUtils;
 import org.walkerljl.db.orm.entity.Column;
 import org.walkerljl.db.orm.entity.SqlEntry;

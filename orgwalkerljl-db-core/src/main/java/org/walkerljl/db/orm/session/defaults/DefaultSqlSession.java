@@ -1,17 +1,17 @@
 package org.walkerljl.db.orm.session.defaults;
 
-import java.io.Serializable;
-import java.sql.Connection;
-import java.util.List;
-
-import org.walkerljl.commons.collection.ListUtils;
 import org.walkerljl.commons.util.Assert;
+import org.walkerljl.commons.util.ListUtils;
 import org.walkerljl.db.orm.entity.SqlEntry;
 import org.walkerljl.db.orm.executor.Executor;
 import org.walkerljl.db.orm.executor.defaults.DefaultExecutor;
 import org.walkerljl.db.orm.session.Configuration;
 import org.walkerljl.db.orm.session.SqlSession;
 import org.walkerljl.db.orm.sql.SqlGenerator;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.util.List;
 
 /**
  * 
