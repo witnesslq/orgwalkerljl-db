@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.walkerljl</groupId>
     <artifactId>orgwalkerljl-db</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>orgwalkerljl-db-ds</artifactId>
   <packaging>pom</packaging>
